@@ -128,9 +128,10 @@ function verifyTypeScriptSetup() {
       parsedValue: ts.JsxEmit.React,
       suggested: 'react',
     },
-    baseUrl: { suggested: paths.appSrc },
-    rootDirs: { suggested: [paths.appSrc] },
     paths: { value: undefined, reason: 'aliased imports are not supported' },
+    // Resolve src folder
+    baseUrl: { suggested: './src' },
+    rootDirs: { suggested: ['./src'] }
   };
 
   const formatDiagnosticHost = {
