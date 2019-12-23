@@ -1,5 +1,5 @@
 {
-  "name": "cra-template-typescript",
+  "name": "@lengio/cra-template-typescript",
   "version": "1.0.0",
   "keywords": [
     "react",
@@ -11,8 +11,11 @@
   "main": "template.json",
   "repository": {
     "type": "git",
-    "url": "https://github.com/facebook/create-react-app.git",
+    "url": "https://github.com/lengio/create-react-app.git",
     "directory": "packages/cra-template-typescript"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
   },
   "license": "MIT",
   "engines": {

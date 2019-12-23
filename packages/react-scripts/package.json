@@ -1,11 +1,14 @@
 {
-  "name": "react-scripts",
+  "name": "@lengio/react-scripts",
   "version": "3.3.0",
   "description": "Configuration and scripts for Create React App.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/facebook/create-react-app.git",
+    "url": "https://github.com/lengio/create-react-app.git",
     "directory": "packages/react-scripts"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
   },
   "license": "MIT",
   "engines": {
@@ -29,6 +32,7 @@
   "types": "./lib/react-app.d.ts",
   "dependencies": {
     "@babel/core": "7.7.5",
+    "@lengio/eslint-config-react-app": "^5.1.0",
     "@svgr/webpack": "4.3.3",
     "@typescript-eslint/eslint-plugin": "^2.10.0",
     "@typescript-eslint/parser": "^2.10.0",
@@ -43,7 +47,6 @@
     "dotenv": "8.2.0",
     "dotenv-expand": "5.1.0",
     "eslint": "^6.6.0",
-    "eslint-config-react-app": "^5.1.0",
     "eslint-loader": "3.0.3",
     "eslint-plugin-flowtype": "4.5.2",
     "eslint-plugin-import": "2.19.1",

@@ -158,7 +158,7 @@ if (program.info) {
         System: ['OS', 'CPU'],
         Binaries: ['Node', 'npm', 'Yarn'],
         Browsers: ['Chrome', 'Edge', 'Internet Explorer', 'Firefox', 'Safari'],
-        npmPackages: ['react', 'react-dom', 'react-scripts'],
+        npmPackages: ['react', 'react-dom', '@lengio/react-scripts'],
         npmGlobalPackages: ['create-react-app'],
       },
       {
@@ -451,7 +451,7 @@ function run(
           console.log('');
           console.log(
             `The ${chalk.cyan(packageInfo.name)} version you're using ${
-              packageInfo.name === 'react-scripts' ? 'is not' : 'may not be'
+              packageInfo.name === '@lengio/react-scripts' ? 'is not' : 'may not be'
             } compatible with the ${chalk.cyan('--template')} option.`
           );
           console.log('');
@@ -568,7 +568,7 @@ function run(
 }
 
 function getInstallPackage(version, originalDirectory) {
-  let packageToInstall = 'react-scripts';
+  let packageToInstall = '@lengio/react-scripts';
   const validSemver = semver.valid(version);
   if (validSemver) {
     packageToInstall += `@${validSemver}`;
@@ -620,7 +620,7 @@ function getInstallPackage(version, originalDirectory) {
 }
 
 function getTemplateInstallPackage(template, originalDirectory) {
-  let templateToInstall = 'cra-template';
+  let templateToInstall = '@lengio/cra-template-typescript';
   if (template) {
     if (template.match(/^file:/)) {
       templateToInstall = `file:${path.resolve(
@@ -732,12 +732,6 @@ function getPackageInfo(installPackage) {
     return Promise.resolve({
       name: installPackage.match(/([^/]+)\.git(#.*)?$/)[1],
     });
-  } else if (installPackage.match(/.+@/)) {
-    // Do not match @scope/ when stripping off @version or @tag
-    return Promise.resolve({
-      name: installPackage.charAt(0) + installPackage.substr(1).split('@')[0],
-      version: installPackage.split('@')[1],
-    });
   } else if (installPackage.match(/^file:/)) {
     const installPackagePath = installPackage.match(/^file:(.*)?$/)[1];
     const { name, version } = require(path.join(
@@ -847,7 +841,7 @@ function checkAppName(appName) {
   }
 
   // TODO: there should be a single place that holds the dependencies
-  const dependencies = ['react', 'react-dom', 'react-scripts'].sort();
+  const dependencies = ['react', 'react-dom', '@lengio/react-scripts'].sort();
   if (dependencies.includes(appName)) {
     console.error(
       chalk.red(
