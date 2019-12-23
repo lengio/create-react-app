@@ -318,7 +318,6 @@ module.exports = {
         ignoreImport: false,
         ignoreExport: false,
       },
-    ],
-    'babel/func-params-comma-dangle': ['warn', 'always-multiline']
+    ]
   },
 };
