@@ -14,7 +14,7 @@ export const App = () => {
         >
         <I18n>
           {({i18n}) => (
-            <>
+            <React.Fragment>
               <title>{i18n._(t`Go beyond basic English`)}</title>
               <meta
                 name="description"
@@ -23,7 +23,7 @@ export const App = () => {
                   We help people, companies, and universities go beyond basic English.
                 `)}
               />
-            </>
+            </React.Fragment>
           )}
         </I18n>
         </Helmet>

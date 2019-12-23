@@ -13,11 +13,15 @@
     "@types/lingui__macro": "^2.7.3",
     "@types/lingui__react": "^2.5.2",
     "@lingui/cli": "^2.7.4",
+    "@lingui/core": "^2.9.0",
     "@lingui/loader": "^2.7.4",
     "@lingui/macro": "^2.7.4",
+    "@lingui/react": "^2.9.0",
+    "babel-core": "^6.26.3",
     "express": "^4.17.1",
     "styled-components": "^4.4.1",
-    "typescript": "~3.7.2"
+    "typescript": "~3.7.2",
+    "react-helmet": "^5.2.1"
   },
   "scripts": {
     "add-locale": "lingui add-locale",
