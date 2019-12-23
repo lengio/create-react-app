@@ -18,9 +18,10 @@ export const App = () => {
               <title>{i18n._(t`Go beyond basic English`)}</title>
               <meta
                 name="description"
-                content={i18n._(
-                  t`This is the largest platform for learning professional and specialized English. We help people, companies, and universities go beyond basic English.`,
-                )}
+                content={i18n._(t`
+                  This is the largest platform for learning professional and specialized English.
+                  We help people, companies, and universities go beyond basic English.
+                `)}
               />
             </>
           )}
