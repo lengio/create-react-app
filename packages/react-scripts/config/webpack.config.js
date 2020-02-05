@@ -13,6 +13,7 @@ const path = require('path');
 const webpack = require('webpack');
 const resolve = require('resolve');
 const PnpWebpackPlugin = require('pnp-webpack-plugin');
+const HardSourceWebpackPlugin = require("hard-source-webpack-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const InlineChunkHtmlPlugin = require('react-dev-utils/InlineChunkHtmlPlugin');
@@ -634,6 +635,11 @@ module.exports = function(webpackEnv) {
       // during a production build.
       // Otherwise React will be compiled in the very slow development mode.
       new webpack.DefinePlugin(env.stringified),
+      // Provide an intermediate caching step for modules.
+      // In order to see results, you'll need to run webpack twice with this plugin:
+      // the first build will take the normal amount of time. The second build will be
+      // signficantly faster
+      isEnvDevelopment && new HardSourceWebpackPlugin(),
       // This is necessary to emit hot updates (currently CSS only):
       isEnvDevelopment && new webpack.HotModuleReplacementPlugin(),
       // Watcher doesn't work well if you mistype casing in a path so we use
