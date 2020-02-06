@@ -98,6 +98,12 @@ module.exports = function(webpackEnv) {
         loader: MiniCssExtractPlugin.loader,
         options: shouldUseRelativeAssetPaths ? { publicPath: '../../' } : {},
       },
+      isEnvDevelopment && {
+        loader: "dts-css-modules-loader",
+        options: {
+          namedExport: true,
+        },
+      },
       {
         loader: require.resolve('css-loader'),
         options: cssOptions,
