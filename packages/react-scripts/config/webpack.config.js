@@ -12,6 +12,7 @@ const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
 const resolve = require('resolve');
+const CircularDependencyPlugin = require("circular-dependency-plugin");
 const PnpWebpackPlugin = require('pnp-webpack-plugin');
 const HardSourceWebpackPlugin = require("hard-source-webpack-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -666,6 +667,12 @@ module.exports = function(webpackEnv) {
           filename: 'static/css/[name].[contenthash:8].css',
           chunkFilename: 'static/css/[name].[contenthash:8].chunk.css',
         }),
+      // Avoid circular dependencies
+      new CircularDependencyPlugin({
+        exclude: /node_modules/,
+        failOnError: true,
+        cwd: process.cwd(),
+      }),
       // Generate an asset manifest file with the following content:
       // - "files" key: Mapping of all asset filenames to their corresponding
       //   output file so that tools can pick it up without having to parse
