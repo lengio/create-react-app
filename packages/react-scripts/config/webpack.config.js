@@ -158,8 +158,8 @@ module.exports = function(webpackEnv) {
     target: 'node',
     entry: paths.appSrcServer,
     output: {
-      fileName: "server.js",
-      chunkFileName: "server.[id].js"
+      filename: "server.js",
+      chunckFilename: "server.[id].js"
     },
     externals: {
       express: "commonjs express"
