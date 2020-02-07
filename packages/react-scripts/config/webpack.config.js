@@ -159,7 +159,7 @@ module.exports = function(webpackEnv) {
     entry: paths.appSrcServer,
     output: {
       filename: "server.js",
-      chunckFilename: "server.[id].js"
+      chunkFilename: "server.[id].js"
     },
     externals: {
       express: "commonjs express"
