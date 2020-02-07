@@ -111,7 +111,9 @@ checkBrowsers(paths.appPath, isInteractive)
 
       const appPackage = require(paths.appPackageJson);
       const publicUrl = paths.publicUrl;
-      const publicPath = config.output.publicPath;
+      // TODO: this is bad... we should handle it diff instead of trusting the [1]
+      // will be the server config.
+      const publicPath = config[1].output.publicPath;
       const buildFolder = path.relative(process.cwd(), paths.appBuild);
       printHostingInstructions(
         appPackage,
