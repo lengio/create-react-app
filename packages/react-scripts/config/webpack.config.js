@@ -154,7 +154,19 @@ module.exports = function(webpackEnv) {
     return loaders;
   };
 
-  return {
+  const serverWebpackConfig = {
+    target: 'node',
+    entry: paths.appSrcServer,
+    output: {
+      fileName: "server.js",
+      chunkFileName: "server.[id].js"
+    },
+    externals: {
+      express: "commonjs express"
+    }
+  };
+
+  const webpackConfig = {
     mode: isEnvProduction ? 'production' : isEnvDevelopment && 'development',
     // Stop compilation early in production
     bail: isEnvProduction,
@@ -635,7 +647,7 @@ module.exports = function(webpackEnv) {
       // In development, this will be an empty string.
       new InterpolateHtmlPlugin(HtmlWebpackPlugin, env.raw),
       // Override webpack infered infomration about moment locales
-      isEnvProduction && ew webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /en|es/),
+      isEnvProduction && webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /en|es/),
       // This gives some necessary context to module not found errors, such as
       // the requesting resource.
       new ModuleNotFoundPlugin(paths.appPath),
@@ -767,4 +779,8 @@ module.exports = function(webpackEnv) {
     // our own hints via the FileSizeReporter
     performance: false,
   };
+
+  return isEnvProduction
+    ? [webpackConfig, { ...webpackConfig, ...serverWebpackConfig}]
+    : webpackConfig;
 };
