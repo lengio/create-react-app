@@ -66,6 +66,7 @@ fs.readdirSync(packagesDir).forEach(name => {
   const packageJson = path.join(packageDir, 'package.json');
   if (fs.existsSync(packageJson)) {
     packagePathsByName[name] = packageDir;
+    packagePathsByName[`@lengio/${name}`] = packageDir;
   }
 });
 Object.keys(packagePathsByName).forEach(name => {
@@ -73,18 +74,20 @@ Object.keys(packagePathsByName).forEach(name => {
   const json = JSON.parse(fs.readFileSync(packageJson, 'utf8'));
   Object.keys(packagePathsByName).forEach(otherName => {
     if (json.dependencies && json.dependencies[otherName]) {
-      json.dependencies[otherName] = 'file:' + packagePathsByName[otherName];
+      json.dependencies[otherName] =
+        'file:' + packagePathsByName[otherName.replace('@lengio/', '')];
     }
     if (json.devDependencies && json.devDependencies[otherName]) {
-      json.devDependencies[otherName] = 'file:' + packagePathsByName[otherName];
+      json.devDependencies[otherName] =
+        'file:' + packagePathsByName[otherName.replace('@lengio/', '')];
     }
     if (json.peerDependencies && json.peerDependencies[otherName]) {
       json.peerDependencies[otherName] =
-        'file:' + packagePathsByName[otherName];
+        'file:' + packagePathsByName[otherName.replace('@lengio/', '')];
     }
     if (json.optionalDependencies && json.optionalDependencies[otherName]) {
       json.optionalDependencies[otherName] =
-        'file:' + packagePathsByName[otherName];
+        'file:' + packagePathsByName[otherName.replace('@lengio/', '')];
     }
   });
 
