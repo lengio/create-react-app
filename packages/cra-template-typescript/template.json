@@ -10,10 +10,14 @@
     "@types/react-helmet": "^5.0.8",
     "@types/jest": "^24.0.0",
     "express": "^4.17.1",
-    "prettier": "^1.19.1",
     "styled-components": "^4.4.1",
     "typescript": "~3.7.2",
     "react-helmet": "^5.2.1"
+  },
+  "devDependencies": {
+    "husky": "^4.2.3",
+    "lint-staged": "^10.0.7",
+    "prettier": "^1.19.1"
   },
   "scripts": {
     "start-production-server": "node src/server",
@@ -21,5 +25,19 @@
     "prettier-css": "prettier --write \"**/*.css\"",
     "prettier-js": "prettier --write \"{*.json,**/*.{js,jsx}}\"",
     "prettier-ts": "prettier --write \"**/*.{ts,tsx}\""
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "echo $HUSKY_GIT_PARAMS"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "prettier --write"
+    ],
+    "*.{css}": [
+      "prettier --write"
+    ]
   }
 }
