@@ -14,5 +14,12 @@
     "styled-components": "^4.4.1",
     "typescript": "~3.7.2",
     "react-helmet": "^5.2.1"
+  },
+  "scripts": {
+    "start-production-server": "node src/server",
+    "prettier": "yarn run prettier-css && yarn run prettier-js && yarn run prettier-ts",
+    "prettier-css": "prettier --write \"**/*.css\"",
+    "prettier-js": "prettier --write \"{*.json,**/*.{js,jsx}}\"",
+    "prettier-ts": "prettier --write \"**/*.{ts,tsx}\""
   }
 }

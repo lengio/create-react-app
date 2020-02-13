@@ -129,7 +129,6 @@ module.exports = function(
       build: 'react-scripts build',
       test: 'react-scripts test',
       eject: 'react-scripts eject',
-      'start-production-server': 'node src/server',
     },
     templateScripts
   );
