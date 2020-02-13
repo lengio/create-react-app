@@ -30,6 +30,11 @@ module.exports = {
 
   plugins: ['import', 'flowtype', 'jsx-a11y', 'react', 'react-hooks'],
 
+  // Disable rules that conflicts with prettier
+  // this should't be necessary since cra doesn't
+  // add any style taste related rule, but just in case
+  extends: ['prettier'],
+
   env: {
     browser: true,
     commonjs: true,
@@ -318,6 +323,6 @@ module.exports = {
         ignoreImport: false,
         ignoreExport: false,
       },
-    ]
+    ],
   },
 };
