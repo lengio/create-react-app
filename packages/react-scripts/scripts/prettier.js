@@ -12,9 +12,20 @@ const ensurePrettierGitHook = require('./utils/ensurePrettierGitHook');
 // Adds prettier to pre-commit hook in git repositories
 ensurePrettierGitHook();
 
+const rules = [
+  '--print-width 100',
+  '--tab-width 2',
+  '--single-quote',
+  '--trailing-comma es5',
+  '--no-bracket-spacing',
+  '--arrow-parens always',
+];
+
 // prettier scripts
-const prettierCss = 'prettier --write "**/*.css"';
-const prettierJs = 'prettier --write "{*.json,**/*.{js,jsx}}"';
-const prettierTs = 'prettier --write "**/*.{ts,tsx}"';
+const prettierCss = `prettier ${rules.join(' ')} --write "**/*.css"`;
+const prettierJs = `prettier ${rules.join(
+  ' '
+)} --write "{*.json,**/*.{js,jsx}}"`;
+const prettierTs = `prettier ${rules.join(' ')} --write "**/*.{ts,tsx}"`;
 
 execSync(prettierCss + ' && ' + prettierJs + ' && ' + prettierTs);
