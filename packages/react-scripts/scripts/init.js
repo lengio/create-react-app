@@ -23,6 +23,7 @@ const { defaultBrowsers } = require('react-dev-utils/browsersHelper');
 const os = require('os');
 const verifyTypeScriptSetup = require('./utils/verifyTypeScriptSetup');
 const isInGitRepository = require('./utils/isInGitRepository');
+const ensurePrettierGitHook = require('./utils/ensurePrettierGitHook');
 
 function isInMercurialRepository() {
   try {
@@ -260,6 +261,8 @@ module.exports = function(
   if (tryGitInit(appPath)) {
     console.log();
     console.log('Initialized a git repository.');
+    // Add prettier to git hooks
+    ensurePrettierGitHook();
   }
 
   // Display the most elegant way to cd.
