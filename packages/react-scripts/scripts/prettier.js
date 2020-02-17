@@ -6,6 +6,10 @@ process.on('unhandledRejection', err => {
 });
 
 const execSync = require('child_process').execSync;
+const ensurePrettierGitHook = require('./utils/ensurePrettierGitHook');
+
+// Adds prettier to pre-commit hook in git repositories
+ensurePrettierGitHook();
 
 // prettier scripts
 const prettierCss = 'prettier --write "**/*.css"';
