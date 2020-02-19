@@ -12,9 +12,10 @@ const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
 const resolve = require('resolve');
-const CircularDependencyPlugin = require("circular-dependency-plugin");
+const CircularDependencyPlugin = require('circular-dependency-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const PnpWebpackPlugin = require('pnp-webpack-plugin');
-const HardSourceWebpackPlugin = require("hard-source-webpack-plugin");
+const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const InlineChunkHtmlPlugin = require('react-dev-utils/InlineChunkHtmlPlugin');
@@ -100,7 +101,7 @@ module.exports = function(webpackEnv) {
         options: shouldUseRelativeAssetPaths ? { publicPath: '../../' } : {},
       },
       isEnvDevelopment && {
-        loader: "dts-css-modules-loader",
+        loader: 'dts-css-modules-loader',
         options: {
           namedExport: true,
         },
@@ -158,14 +159,14 @@ module.exports = function(webpackEnv) {
     target: 'node',
     entry: paths.appSrcServer,
     output: {
-      filename: "server.js",
-      chunkFilename: "server.[id].js",
+      filename: 'server.js',
+      chunkFilename: 'server.[id].js',
       path: isEnvProduction ? paths.appBuild : undefined,
-      publicPath
+      publicPath,
     },
     externals: {
-      express: "commonjs express"
-    }
+      express: 'commonjs express',
+    },
   };
 
   const webpackConfig = {
@@ -292,8 +293,8 @@ module.exports = function(webpackEnv) {
               : false,
           },
           cssProcessorPluginOptions: {
-              preset: ['default', { minifyFontValues: { removeQuotes: false } }]
-          }
+            preset: ['default', { minifyFontValues: { removeQuotes: false } }],
+          },
         }),
       ],
       // Automatically split vendor and commons
@@ -315,9 +316,12 @@ module.exports = function(webpackEnv) {
       // We placed these paths second because we want `node_modules` to "win"
       // if there are any conflicts. This matches Node resolution mechanism.
       // https://github.com/facebook/create-react-app/issues/253
-      modules: ['node_modules', paths.appNodeModules, paths.appSrc, paths.appSrcApp].concat(
-        modules.additionalModulePaths || []
-      ),
+      modules: [
+        'node_modules',
+        paths.appNodeModules,
+        paths.appSrc,
+        paths.appSrcApp,
+      ].concat(modules.additionalModulePaths || []),
       // These are the reasonable defaults supported by the Node ecosystem.
       // We also include JSX as a common component filename extension to support
       // some tools, although we do not recommend using it, see:
@@ -393,7 +397,9 @@ module.exports = function(webpackEnv) {
                     return eslintConfig;
                   } else {
                     return {
-                      extends: [require.resolve('@lengio/eslint-config-react-app')],
+                      extends: [
+                        require.resolve('@lengio/eslint-config-react-app'),
+                      ],
                     };
                   }
                 })(),
@@ -525,7 +531,7 @@ module.exports = function(webpackEnv) {
               exclude: cssModuleRegex,
               use: getStyleLoaders({
                 importLoaders: 1,
-                localsConvention: "camelCaseOnly",
+                localsConvention: 'camelCaseOnly',
                 sourceMap: isEnvProduction && shouldUseSourceMap,
               }),
               // Don't consider CSS imports dead code even if the
@@ -649,7 +655,8 @@ module.exports = function(webpackEnv) {
       // In development, this will be an empty string.
       new InterpolateHtmlPlugin(HtmlWebpackPlugin, env.raw),
       // Override webpack infered infomration about moment locales
-      isEnvProduction && new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /en|es/),
+      isEnvProduction &&
+        new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /en|es/),
       // This gives some necessary context to module not found errors, such as
       // the requesting resource.
       new ModuleNotFoundPlugin(paths.appPath),
@@ -659,6 +666,8 @@ module.exports = function(webpackEnv) {
       // during a production build.
       // Otherwise React will be compiled in the very slow development mode.
       new webpack.DefinePlugin(env.stringified),
+      // Copy static folder to the build path
+      new CopyWebpackPlugin([{ from: paths.appStatic, to: 'static' }]),
       // Provide an intermediate caching step for modules.
       // In order to see results, you'll need to run webpack twice with this plugin:
       // the first build will take the normal amount of time. The second build will be
@@ -783,6 +792,6 @@ module.exports = function(webpackEnv) {
   };
 
   return isEnvProduction
-    ? [webpackConfig, { ...webpackConfig, ...serverWebpackConfig}]
+    ? [webpackConfig, { ...webpackConfig, ...serverWebpackConfig }]
     : webpackConfig;
 };
