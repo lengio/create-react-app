@@ -110,7 +110,7 @@ checkBrowsers(paths.appPath, isInteractive)
       console.log();
 
       const appPackage = require(paths.appPackageJson);
-      const publicUrl = paths.publicUrl;
+      const publicUrl = paths.publicUrlOrPath;
       // TODO: this is bad... we should handle it diff instead of trusting the [1]
       // will be the server config.
       const publicPath = config[1].output.publicPath;
