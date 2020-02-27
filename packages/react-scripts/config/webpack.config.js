@@ -153,7 +153,7 @@ module.exports = function(webpackEnv) {
       filename: 'server.js',
       chunkFilename: 'server.[id].js',
       path: isEnvProduction ? paths.appBuild : undefined,
-      publicPath,
+      publicPath: paths.publicUrlOrPath,
     },
     externals: {
       express: 'commonjs express',
