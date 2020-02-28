@@ -32,7 +32,7 @@
   "types": "./lib/react-app.d.ts",
   "dependencies": {
     "@babel/core": "7.8.4",
-    "@lengio/eslint-config-react-app": "^5.2.0",
+    "@lengio/eslint-config-react-app": "^5.3.1",
     "@lengio/react-dev-utils": "^10.2.0",
     "@lingui/loader": "^2.7.4",
     "@svgr/webpack": "4.3.3",
