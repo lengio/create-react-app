@@ -52,6 +52,7 @@
     "dotenv-expand": "5.1.0",
     "dts-css-modules-loader": "^1.0.3",
     "eslint": "^6.6.0",
+    "eslint-config-prettier": "^6.10.0",
     "eslint-loader": "3.0.3",
     "eslint-plugin-flowtype": "4.6.0",
     "eslint-plugin-import": "2.20.0",
