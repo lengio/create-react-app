@@ -1,7 +1,7 @@
 {
   "package": {
     "dependencies": {
-      "@lengio/slang-atoms": "^0.0.3",
+      "@lengio/slang-atoms": "^0.0.4",
       "express": "^4.17.1",
       "styled-components": "^4.4.1",
       "react-helmet": "^5.2.1"
