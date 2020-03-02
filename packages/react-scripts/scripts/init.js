@@ -148,7 +148,7 @@ module.exports = function(
   ];
 
   // Keys from templatePackage that will be merged with appPackage
-  const templatePackageToMerge = ['dependencies', 'scripts'];
+  const templatePackageToMerge = ['scripts', 'dependencies', 'devDependencies'];
 
   // Keys from templatePackage that will be added to appPackage,
   // replacing any existing entries.
