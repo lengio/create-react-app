@@ -136,7 +136,6 @@ module.exports = function(
     'man',
     'directories',
     'repository',
-    'devDependencies',
     'peerDependencies',
     'bundledDependencies',
     'optionalDependencies',
