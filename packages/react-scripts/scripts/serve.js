@@ -20,7 +20,7 @@ const paths = require('../config/paths');
 const chalk = require('react-dev-utils/chalk');
 const app = express();
 
-app.use(express.static(path.join(paths.appBuild)));
+app.use(express.static(paths.appBuild));
 
 app.get('/*', function(req, res) {
   res.sendFile(path.join(paths.appBuild, 'index.html'));
