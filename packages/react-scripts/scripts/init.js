@@ -169,6 +169,7 @@ module.exports = function(
     {
       start: 'react-scripts start',
       build: 'react-scripts build',
+      serve: 'react-scripts serve',
       test: 'react-scripts test',
       eject: 'react-scripts eject',
       prettier: 'react-scripts prettier',
