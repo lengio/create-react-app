@@ -13,7 +13,6 @@ const path = require('path');
 const webpack = require('webpack');
 const resolve = require('resolve');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 const PnpWebpackPlugin = require('pnp-webpack-plugin');
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -663,8 +662,6 @@ module.exports = function(webpackEnv) {
       // during a production build.
       // Otherwise React will be compiled in the very slow development mode.
       new webpack.DefinePlugin(env.stringified),
-      // Copy static folder to the build path
-      new CopyWebpackPlugin([{ from: paths.appStatic, to: 'static' }]),
       // Provide an intermediate caching step for modules.
       // In order to see results, you'll need to run webpack twice with this plugin:
       // the first build will take the normal amount of time. The second build will be
