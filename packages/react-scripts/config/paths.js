@@ -133,7 +133,7 @@ if (
     appPackageJson: resolveOwn('package.json'),
     appSrc: resolveOwn(`${templatePath}/src`),
     appSrcApp: resolveOwn(`${templatePath}/src/app`),
-    appSrcServer: resolveOwn(`${templatePath}/src/sever`),
+    appSrcServer: resolveOwn(`${templatePath}/src/server`),
     locales: resolveOwn(`${templatePath}/src/locales`),
     appTsConfig: resolveOwn(`${templatePath}/tsconfig.json`),
     appJsConfig: resolveOwn(`${templatePath}/jsconfig.json`),
