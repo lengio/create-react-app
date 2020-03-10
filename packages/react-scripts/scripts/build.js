@@ -62,6 +62,10 @@ if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
 
 // Generate configuration
 const config = configFactory('production');
+// Add SSR config if needed (when the server file exist)
+const buildConfig = fs.pathExistsSync(paths.appSrcServer)
+  ? [config, serverConfig]
+  : config;
 
 // We require that you explicitly set browsers and do not fall back to
 // browserslist defaults.
@@ -161,7 +165,7 @@ function build(previousFileSizes) {
 
   console.log('Creating an optimized production build...');
 
-  const compiler = webpack([config, ssrConfig]);
+  const compiler = webpack(buildConfig);
   return new Promise((resolve, reject) => {
     compiler.run((err, stats) => {
       let messages;
