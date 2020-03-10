@@ -36,6 +36,7 @@ const chalk = require('react-dev-utils/chalk');
 const fs = require('fs-extra');
 const webpack = require('webpack');
 const configFactory = require('../config/webpack.config');
+const ssrConfig = require('../config/webpackSSR.config');
 const paths = require('../config/paths');
 const checkRequiredFiles = require('react-dev-utils/checkRequiredFiles');
 const formatWebpackMessages = require('react-dev-utils/formatWebpackMessages');
@@ -111,9 +112,7 @@ checkBrowsers(paths.appPath, isInteractive)
 
       const appPackage = require(paths.appPackageJson);
       const publicUrl = paths.publicUrlOrPath;
-      // TODO: this is bad... we should handle it diff instead of trusting the [1]
-      // will be the server config.
-      const publicPath = config[1].output.publicPath;
+      const publicPath = config.output.publicPath;
       const buildFolder = path.relative(process.cwd(), paths.appBuild);
       printHostingInstructions(
         appPackage,
@@ -162,7 +161,7 @@ function build(previousFileSizes) {
 
   console.log('Creating an optimized production build...');
 
-  const compiler = webpack(config);
+  const compiler = webpack([config, ssrConfig]);
   return new Promise((resolve, reject) => {
     compiler.run((err, stats) => {
       let messages;
