@@ -30,4 +30,6 @@ const port = process.env.PORT || 9000;
 
 app.listen(port);
 
-console.log(`The app was served at port ${chalk.cyan(port)}`);
+console.log(`Server started! ${chalk.cyan('✓')}`);
+console.log(`→ app listening at port: ${chalk.cyan(port)}`);
+console.log('Press CTRL-C to stop');
