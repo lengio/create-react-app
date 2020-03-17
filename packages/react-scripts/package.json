@@ -34,7 +34,6 @@
     "@babel/core": "7.8.4",
     "@lengio/eslint-config-react-app": "^5.3.1",
     "@lengio/react-dev-utils": "^10.2.0",
-    "@lengio/slang-atoms": "^0.0.4",
     "@lingui/loader": "^2.7.4",
     "@svgr/webpack": "4.3.3",
     "@typescript-eslint/eslint-plugin": "^2.10.0",
@@ -101,6 +100,7 @@
     "fsevents": "2.1.2"
   },
   "peerDependencies": {
+    "@lengio/slang-atoms": "^0.0.6",
     "typescript": "^3.2.1"
   },
   "peerDependenciesMeta": {
