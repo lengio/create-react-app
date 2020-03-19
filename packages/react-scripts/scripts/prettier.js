@@ -6,6 +6,8 @@ process.on('unhandledRejection', err => {
   throw err;
 });
 
+const os = require('os');
+const chalk = require('react-dev-utils/chalk');
 const execSync = require('child_process').execSync;
 const ensurePrettierGitHook = require('./utils/ensurePrettierGitHook');
 
@@ -21,11 +23,17 @@ const rules = [
   '--arrow-parens always',
 ];
 
-// prettier scripts
-const prettierCss = `prettier ${rules.join(' ')} --write "**/*.css"`;
-const prettierJs = `prettier ${rules.join(
-  ' '
-)} --write "{*.json,**/*.{js,jsx}}"`;
-const prettierTs = `prettier ${rules.join(' ')} --write "**/*.{ts,tsx}"`;
+// Get staged files on git
+const gitDiffCmd = `git diff --cached --name-only --diff-filter=ACMR "*.js" "*.jsx" "*.ts" "*.tsx" "*.css"`;
+const filesToWrite = execSync(gitDiffCmd)
+  .toString()
+  .split(os.EOL)
+  .join(' ');
 
-execSync(prettierCss + ' && ' + prettierJs + ' && ' + prettierTs);
+// Run prettier on the staged files
+execSync(`prettier ${rules.join(' ')} --write ${filesToWrite}`);
+
+// Add files back to the commit after running prettier
+execSync(`git add ${filesToWrite}`);
+
+console.log(`\n${chalk.cyan('✓')} Prettier finished\n`);
