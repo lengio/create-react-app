@@ -25,15 +25,20 @@ const rules = [
 
 // Get staged files on git
 const gitDiffCmd = `git diff --cached --name-only --diff-filter=ACMR "*.js" "*.jsx" "*.ts" "*.tsx" "*.css"`;
-const filesToWrite = execSync(gitDiffCmd)
+const targetFiles = execSync(gitDiffCmd)
   .toString()
   .split(os.EOL)
   .join(' ');
 
+// Exit if no targetFiles
+if (!targetFiles) {
+  process.exit(0);
+}
+
 // Run prettier on the staged files
-execSync(`prettier ${rules.join(' ')} --write ${filesToWrite}`);
+execSync(`prettier ${rules.join(' ')} --write ${targetFiles}`);
 
 // Add files back to the commit after running prettier
-execSync(`git add ${filesToWrite}`);
+execSync(`git add ${targetFiles}`);
 
 console.log(`\n${chalk.cyan('✓')} Prettier finished\n`);
