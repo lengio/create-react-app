@@ -1,6 +1,6 @@
 {
   "name": "@lengio/react-dev-utils",
-  "version": "10.2.0.1",
+  "version": "10.3.0",
   "description": "webpack utilities used by Create React App",
   "repository": {
     "type": "git",

@@ -36,6 +36,7 @@ const chalk = require('react-dev-utils/chalk');
 const fs = require('fs-extra');
 const webpack = require('webpack');
 const configFactory = require('../config/webpack.config');
+const ssrConfig = require('../config/webpackSSR.config');
 const paths = require('../config/paths');
 const checkRequiredFiles = require('react-dev-utils/checkRequiredFiles');
 const formatWebpackMessages = require('react-dev-utils/formatWebpackMessages');
@@ -61,6 +62,10 @@ if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
 
 // Generate configuration
 const config = configFactory('production');
+// Add SSR config if needed (when the server file exist)
+const buildConfig = fs.pathExistsSync(paths.appSrcServer)
+  ? [config, serverConfig]
+  : config;
 
 // We require that you explicitly set browsers and do not fall back to
 // browserslist defaults.
@@ -160,7 +165,7 @@ function build(previousFileSizes) {
 
   console.log('Creating an optimized production build...');
 
-  const compiler = webpack(config);
+  const compiler = webpack(buildConfig);
   return new Promise((resolve, reject) => {
     compiler.run((err, stats) => {
       let messages;
