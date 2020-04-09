@@ -22,15 +22,8 @@ const spawn = require('react-dev-utils/crossSpawn');
 const { defaultBrowsers } = require('react-dev-utils/browsersHelper');
 const os = require('os');
 const verifyTypeScriptSetup = require('./utils/verifyTypeScriptSetup');
-
-function isInGitRepository() {
-  try {
-    execSync('git rev-parse --is-inside-work-tree', { stdio: 'ignore' });
-    return true;
-  } catch (e) {
-    return false;
-  }
-}
+const isInGitRepository = require('./utils/isInGitRepository');
+const ensurePrettierGitHook = require('./utils/ensurePrettierGitHook');
 
 function isInMercurialRepository() {
   try {
@@ -143,7 +136,6 @@ module.exports = function(
     'man',
     'directories',
     'repository',
-    'devDependencies',
     'peerDependencies',
     'bundledDependencies',
     'optionalDependencies',
@@ -156,7 +148,7 @@ module.exports = function(
   ];
 
   // Keys from templatePackage that will be merged with appPackage
-  const templatePackageToMerge = ['dependencies', 'scripts'];
+  const templatePackageToMerge = ['scripts', 'dependencies'];
 
   // Keys from templatePackage that will be added to appPackage,
   // replacing any existing entries.
@@ -177,8 +169,10 @@ module.exports = function(
     {
       start: 'react-scripts start',
       build: 'react-scripts build',
+      serve: 'react-scripts serve',
       test: 'react-scripts test',
       eject: 'react-scripts eject',
+      prettier: 'react-scripts prettier',
     },
     templateScripts
   );
@@ -335,6 +329,8 @@ module.exports = function(
   if (initializedGit && tryGitCommit(appPath)) {
     console.log();
     console.log('Created git commit.');
+    // Add prettier to git hooks
+    ensurePrettierGitHook();
   }
 
   // Display the most elegant way to cd.
