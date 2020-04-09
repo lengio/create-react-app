@@ -17,11 +17,6 @@ const os = require('os');
 const immer = require('react-dev-utils/immer').produce;
 const globby = require('react-dev-utils/globby').sync;
 
-// @lengio/slang-atoms package
-const slangAtomsUtils = require('@lengio/slang-atoms/utils');
-const getSlangAtomsTypescriptPaths =
-  slangAtomsUtils.getSlangAtomsTypescriptPaths;
-
 function writeJson(fileName, object) {
   fs.writeFileSync(
     fileName,
@@ -133,10 +128,7 @@ function verifyTypeScriptSetup() {
       parsedValue: ts.JsxEmit.React,
       suggested: 'react',
     },
-    paths: {
-      value: getSlangAtomsTypescriptPaths(),
-      reason: 'aliased imports are not supported but we include slang-atoms',
-    },
+    paths: { value: undefined, reason: 'aliased imports are not supported' },
     // Resolve src folder
     baseUrl: { suggested: './src' },
     rootDirs: { suggested: ['./src'] },
@@ -231,11 +223,9 @@ function verifyTypeScriptSetup() {
 
   // tsconfig will have the merged "include" and "exclude" by this point
   if (parsedTsConfig.include == null) {
-    appTsConfig.include = ['src', paths.slangAtoms];
+    appTsConfig.include = ['src'];
     messages.push(
-      `${chalk.cyan('include')} should be ${chalk.cyan.bold(
-        'src ' + paths.slangAtoms
-      )}`
+      `${chalk.cyan('include')} should be ${chalk.cyan.bold('src')}`
     );
   }
 
@@ -265,12 +255,14 @@ function verifyTypeScriptSetup() {
     writeJson(paths.appTsConfig, appTsConfig);
   }
 
-  // Reference `react-scripts` types
-  if (!fs.existsSync(paths.appTypeDeclarations)) {
-    fs.writeFileSync(
-      paths.appTypeDeclarations,
-      `/// <reference types="react-scripts" />${os.EOL}`
-    );
+  if (fs.existsSync(paths.appSrc)) {
+    // Reference `react-scripts` types
+    if (!fs.existsSync(paths.appTypeDeclarations)) {
+      fs.writeFileSync(
+        paths.appTypeDeclarations,
+        `/// <reference types="react-scripts" />${os.EOL}`
+      );
+    }
   }
 }
 

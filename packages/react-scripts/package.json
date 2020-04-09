@@ -100,7 +100,6 @@
     "fsevents": "2.1.2"
   },
   "peerDependencies": {
-    "@lengio/slang-atoms": "^0.0.8",
     "typescript": "^3.2.1"
   },
   "peerDependenciesMeta": {
