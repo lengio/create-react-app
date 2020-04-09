@@ -1,6 +1,6 @@
 {
   "name": "@lengio/react-scripts",
-  "version": "3.5.26",
+  "version": "3.5.27",
   "description": "Configuration and scripts for Create React App.",
   "repository": {
     "type": "git",
@@ -32,9 +32,9 @@
   "types": "./lib/react-app.d.ts",
   "dependencies": {
     "@babel/core": "7.9.0",
-    "@pmmmwh/react-refresh-webpack-plugin": "0.3.0-beta.1",
     "@lengio/eslint-config-react-app": "^5.3.1",
     "@lingui/loader": "^2.7.4",
+    "@pmmmwh/react-refresh-webpack-plugin": "0.3.0-beta.1",
     "@svgr/webpack": "4.3.3",
     "@typescript-eslint/eslint-plugin": "^2.10.0",
     "@typescript-eslint/parser": "^2.10.0",
@@ -51,8 +51,8 @@
     "dotenv-expand": "5.1.0",
     "dts-css-modules-loader": "^1.0.3",
     "eslint": "^6.6.0",
-    "eslint-config-react-app": "^5.2.1",
     "eslint-config-prettier": "^6.10.0",
+    "eslint-config-react-app": "^5.2.1",
     "eslint-loader": "3.0.3",
     "eslint-plugin-flowtype": "4.6.0",
     "eslint-plugin-import": "2.20.1",
