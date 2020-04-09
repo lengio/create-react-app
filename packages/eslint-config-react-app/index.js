@@ -30,6 +30,11 @@ module.exports = {
 
   plugins: ['import', 'flowtype', 'jsx-a11y', 'react', 'react-hooks'],
 
+  // Disable rules that conflicts with prettier
+  // this should't be necessary since cra doesn't
+  // add any style taste related rule, but just in case
+  extends: ['prettier'],
+
   env: {
     browser: true,
     commonjs: true,
@@ -216,14 +221,6 @@ module.exports = {
     'no-useless-concat': 'warn',
     'no-useless-constructor': 'warn',
     'no-useless-escape': 'warn',
-    'no-useless-rename': [
-      'warn',
-      {
-        ignoreDestructuring: false,
-        ignoreImport: false,
-        ignoreExport: false,
-      },
-    ],
     'no-with': 'warn',
     'no-whitespace-before-property': 'warn',
     'react-hooks/exhaustive-deps': 'warn',
@@ -314,5 +311,18 @@ module.exports = {
     'flowtype/define-flow-type': 'warn',
     'flowtype/require-valid-file-annotation': 'warn',
     'flowtype/use-flow-type': 'warn',
+
+    // custom slang rules
+    'max-len': ['error', 100],
+    'comma-dangle': ['warn', 'always-multiline'],
+    'object-curly-spacing': ['warn', 'never'],
+    'no-useless-rename': [
+      'warn',
+      {
+        ignoreDestructuring: true,
+        ignoreImport: false,
+        ignoreExport: false,
+      },
+    ],
   },
 };
