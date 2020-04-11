@@ -18,7 +18,7 @@ const rules = [
   '--print-width 100',
   '--tab-width 2',
   '--single-quote',
-  '--trailing-comma es5',
+  '--trailing-comma all',
   '--no-bracket-spacing',
   '--arrow-parens always',
 ];
