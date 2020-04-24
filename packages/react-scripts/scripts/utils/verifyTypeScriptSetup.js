@@ -128,7 +128,7 @@ function verifyTypeScriptSetup() {
       parsedValue: ts.JsxEmit.React,
       suggested: 'react',
     },
-    paths: { suggested: {'slang-atoms/*': ['node_modules/@lengio/slang-atoms/*']} },
+    paths: { suggested: {'slang-atoms/*': ['../node_modules/@lengio/slang-atoms/*']} },
     // Resolve src folder
     baseUrl: { suggested: './src' },
     rootDirs: { suggested: ['./src'] },
