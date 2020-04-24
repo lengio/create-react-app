@@ -46,11 +46,6 @@ function getAdditionalModulePaths(options = {}) {
     return [paths.appSrc];
   }
 
-  // HACK: Allow slang-atoms packages forlder as the src dir
-  if (path.relative(paths.appPackages, baseUrlResolved) === '') {
-    return [paths.appPackages];
-  }
-
   // If the path is equal to the root directory we ignore it here.
   // We don't want to allow importing from the root directly as source files are
   // not transpiled outside of `src`. We do allow importing them with the

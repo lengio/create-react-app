@@ -310,7 +310,6 @@ module.exports = function(webpackEnv) {
         paths.appNodeModules,
         paths.appSrc,
         paths.appSrcApp,
-        paths.appPackages,
       ].concat(modules.additionalModulePaths || []),
       // These are the reasonable defaults supported by the Node ecosystem.
       // We also include JSX as a common component filename extension to support
@@ -322,6 +321,7 @@ module.exports = function(webpackEnv) {
         .map(ext => `.${ext}`)
         .filter(ext => useTypeScript || !ext.includes('ts')),
       alias: {
+        'slang-atoms': path.resolve("node_modules", "@lengio/slang-atoms"),
         // Support React Native Web
         // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
         'react-native': 'react-native-web',
@@ -382,7 +382,7 @@ module.exports = function(webpackEnv) {
               loader: require.resolve('eslint-loader'),
             },
           ],
-          include: [paths.appSrc, paths.appPackages],
+          include: [paths.appSrc],
         },
         {
           // "oneOf" will traverse all following loaders until one will
@@ -404,7 +404,7 @@ module.exports = function(webpackEnv) {
             // The preset includes JSX, Flow, TypeScript, and some ESnext features.
             {
               test: /\.(js|mjs|jsx|ts|tsx)$/,
-              include: [paths.appSrc, paths.appPackages],
+              include: [paths.appSrc],
               loader: require.resolve('babel-loader'),
               options: {
                 customize: require.resolve(

@@ -67,7 +67,6 @@ module.exports = {
   appIndexJs: resolveModule(resolveApp, 'src/index'),
   appPackageJson: resolveApp('package.json'),
   appSrc: resolveApp('src'),
-  appPackages: resolveApp('packages'),
   appSrcApp: resolveApp('src/app'),
   appSrcServer: resolveApp('src/server'),
   appTsConfig: resolveApp('tsconfig.json'),
@@ -76,7 +75,6 @@ module.exports = {
   testsSetup: resolveModule(resolveApp, 'src/setupTests'),
   proxySetup: resolveApp('src/setupProxy.js'),
   appNodeModules: resolveApp('node_modules'),
-  slangAtoms: resolveApp('node_modules/@lengio/slang-atoms'),
   publicUrlOrPath,
 };
 
@@ -94,7 +92,6 @@ module.exports = {
   appIndexJs: resolveModule(resolveApp, 'src/index'),
   appPackageJson: resolveApp('package.json'),
   appSrc: resolveApp('src'),
-  appPackages: resolveApp('packages'),
   appSrcApp: resolveApp('src/app'),
   appSrcApp: resolveApp('src/server'),
   appTsConfig: resolveApp('tsconfig.json'),
@@ -102,8 +99,7 @@ module.exports = {
   yarnLockFile: resolveApp('yarn.lock'),
   testsSetup: resolveModule(resolveApp, 'src/setupTests'),
   proxySetup: resolveApp('src/setupProxy.js'),
-  appNodeModules: resolveApp('node_modules'),
-  slangAtoms: resolveApp('node_modules/@lengio/slang-atoms'),
+  appNodeModules: resolveApp('node_modules'),  
   publicUrlOrPath,
   // These properties only exist before ejecting:
   ownPath: resolveOwn('.'),
@@ -134,7 +130,6 @@ if (
     appIndexJs: resolveModule(resolveOwn, `${templatePath}/src/index`),
     appPackageJson: resolveOwn('package.json'),
     appSrc: resolveOwn(`${templatePath}/src`),
-    appPackages: resolveOwn(`${templatePath}/packages`),
     appSrcApp: resolveOwn(`${templatePath}/src/app`),
     appSrcServer: resolveOwn(`${templatePath}/src/server`),
     locales: resolveOwn(`${templatePath}/src/locales`),
@@ -144,7 +139,6 @@ if (
     testsSetup: resolveModule(resolveOwn, `${templatePath}/src/setupTests`),
     proxySetup: resolveOwn(`${templatePath}/src/setupProxy.js`),
     appNodeModules: resolveOwn('node_modules'),
-    slangAtoms: resolveApp('node_modules/@lengio/slang-atoms'),
     publicUrlOrPath,
     // These properties only exist before ejecting:
     ownPath: resolveOwn('.'),

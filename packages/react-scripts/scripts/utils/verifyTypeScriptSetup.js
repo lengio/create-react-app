@@ -123,7 +123,7 @@ function verifyTypeScriptSetup() {
     },
     resolveJsonModule: { value: true, reason: 'to match webpack loader' },
     isolatedModules: { value: true, reason: 'implementation limitation' },
-    noEmit: { suggested: true },
+    noEmit: { value: true },
     jsx: {
       parsedValue: ts.JsxEmit.React,
       suggested: 'react',
@@ -255,14 +255,12 @@ function verifyTypeScriptSetup() {
     writeJson(paths.appTsConfig, appTsConfig);
   }
 
-  if (fs.existsSync(paths.appSrc)) {
-    // Reference `react-scripts` types
-    if (!fs.existsSync(paths.appTypeDeclarations)) {
-      fs.writeFileSync(
-        paths.appTypeDeclarations,
-        `/// <reference types="react-scripts" />${os.EOL}`
-      );
-    }
+  // Reference `react-scripts` types
+  if (!fs.existsSync(paths.appTypeDeclarations)) {
+    fs.writeFileSync(
+      paths.appTypeDeclarations,
+      `/// <reference types="react-scripts" />${os.EOL}`
+    );
   }
 }
 
