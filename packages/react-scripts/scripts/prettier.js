@@ -45,8 +45,8 @@ if (!targetFiles) {
 // Run prettier on the staged files
 execSync(`prettier ${rules.join(' ')} --write ${targetFiles}`);
 
+// Add files back to the commit after running prettier
 if (!process.argv.includes('--all')) {
-  // Add files back to the commit after running prettier
   execSync(`git add ${getStagedFiles()}`);
 }
 
