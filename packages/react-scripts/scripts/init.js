@@ -22,6 +22,7 @@ const spawn = require('react-dev-utils/crossSpawn');
 const { defaultBrowsers } = require('react-dev-utils/browsersHelper');
 const os = require('os');
 const verifyTypeScriptSetup = require('./utils/verifyTypeScriptSetup');
+const verifyPrettierSetup = require('./utils/verifyPrettierSetup');
 const isInGitRepository = require('./utils/isInGitRepository');
 const ensurePrettierGitHook = require('./utils/ensurePrettierGitHook');
 
@@ -329,6 +330,9 @@ module.exports = function(
     console.log();
     verifyTypeScriptSetup();
   }
+
+  // Add prettier config file
+  verifyPrettierSetup();
 
   // Remove template
   console.log(`Removing template package using ${command}...`);

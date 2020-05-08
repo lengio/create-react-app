@@ -11,18 +11,10 @@ const os = require('os');
 const chalk = require('react-dev-utils/chalk');
 const execSync = require('child_process').execSync;
 const ensurePrettierGitHook = require('./utils/ensurePrettierGitHook');
+const rules = require('./utils/prettierRules');
 
 // Adds prettier to pre-commit hook in git repositories
 ensurePrettierGitHook();
-
-const rules = [
-  '--print-width 100',
-  '--tab-width 2',
-  '--single-quote',
-  '--trailing-comma all',
-  '--no-bracket-spacing',
-  '--arrow-parens always',
-];
 
 // Get staged files on git
 const gitDiffCmd = `git diff --cached --name-only --diff-filter=ACMR "*.js" "*.jsx" "*.ts" "*.tsx" "*.css"`;
@@ -31,7 +23,7 @@ function getStagedFiles() {
     .toString()
     .split(os.EOL)
     .join(' ');
-};
+}
 
 const targetFiles = process.argv.includes('--all')
   ? '"**/*.{ts,tsx,js,jsx,css}"'
@@ -43,7 +35,7 @@ if (!targetFiles) {
 }
 
 // Run prettier on the staged files
-execSync(`prettier ${rules.join(' ')} --write ${targetFiles}`);
+execSync(`prettier ${rules.CLI_RULES.join(' ')} --write ${targetFiles}`);
 
 // Add files back to the commit after running prettier
 if (!process.argv.includes('--all')) {

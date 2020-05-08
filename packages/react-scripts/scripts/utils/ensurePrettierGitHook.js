@@ -9,7 +9,7 @@ const isInGitRepository = require('./isInGitRepository');
 
 const GIT_HOOKS_PATH = path.join('.git', 'hooks');
 
-module.exports = () => {
+const ensurePrettierGitHook = () => {
   // Return if not in git repository
   if (!isInGitRepository()) {
     return;
@@ -40,3 +40,5 @@ module.exports = () => {
 
   console.log(`Prettier hook added to ${chalk.cyan(preCommitHookPath)}`);
 };
+
+module.exports = ensurePrettierGitHook;
