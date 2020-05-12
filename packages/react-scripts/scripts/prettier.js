@@ -11,8 +11,11 @@ const os = require('os');
 const chalk = require('react-dev-utils/chalk');
 const execSync = require('child_process').execSync;
 const ensurePrettierGitHook = require('./utils/ensurePrettierGitHook');
+const verifyPrettierSetup = require('./utils/verifyPrettierSetup');
 const rules = require('./utils/prettierRules');
 
+// make sure the config file have our rules
+verifyPrettierSetup();
 // Adds prettier to pre-commit hook in git repositories
 ensurePrettierGitHook();
 
