@@ -324,7 +324,13 @@ module.exports = function(webpackEnv) {
         .map(ext => `.${ext}`)
         .filter(ext => useTypeScript || !ext.includes('ts')),
       alias: {
-        'slang-atoms': path.resolve("node_modules", "@lengio/slang-atoms"),
+        // HACK: when linking slang-atoms locally hooks fails
+        //  because the project will find the react version in
+        // slang-atoms (devDependency) which might not be the same
+        ...(isEnvDevelopment && {
+          react: path.resolve('node_modules/react'),
+        }),
+        'slang-atoms': path.resolve('node_modules', '@lengio/slang-atoms'),
         // Support React Native Web
         // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
         'react-native': 'react-native-web',
@@ -377,7 +383,9 @@ module.exports = function(webpackEnv) {
                 baseConfig: isExtendingEslintConfig
                   ? undefined
                   : {
-                      extends: [require.resolve('@lengio/eslint-config-react-app')],
+                      extends: [
+                        require.resolve('@lengio/eslint-config-react-app'),
+                      ],
                     },
                 useEslintrc: isExtendingEslintConfig,
                 // @remove-on-eject-end
