@@ -59,9 +59,17 @@ function verifyTypeScriptSetup() {
   // Ensure typescript is installed
   let ts;
   try {
+    // TODO: Remove this hack once `globalThis` issue is resolved
+    // https://github.com/jsdom/jsdom/issues/2961
+    const globalThisWasDefined = !!global.globalThis;
+
     ts = require(resolve.sync('typescript', {
       basedir: paths.appNodeModules,
     }));
+
+    if (!globalThisWasDefined && !!global.globalThis) {
+      delete global.globalThis;
+    }
   } catch (_) {
     console.error(
       chalk.bold.red(
@@ -106,8 +114,7 @@ function verifyTypeScriptSetup() {
     allowSyntheticDefaultImports: { suggested: true },
     strict: { suggested: true },
     forceConsistentCasingInFileNames: { suggested: true },
-    // TODO: Enable for v4.0 (#6936)
-    // noFallthroughCasesInSwitch: { suggested: true },
+    noFallthroughCasesInSwitch: { suggested: true },
 
     // These values are required and cannot be changed by the user
     // Keep this in sync with the webpack config
@@ -128,7 +135,9 @@ function verifyTypeScriptSetup() {
       parsedValue: ts.JsxEmit.React,
       suggested: 'react',
     },
-    paths: { suggested: {'slang-atoms/*': ['../node_modules/@lengio/slang-atoms/*']} },
+    paths: {
+      suggested: { 'slang-atoms/*': ['../node_modules/@lengio/slang-atoms/*'] },
+    },
     // Resolve src folder
     baseUrl: { suggested: './src' },
     rootDirs: { suggested: ['./src'] },
