@@ -37,6 +37,7 @@ const fs = require('fs-extra');
 const bfj = require('bfj');
 const webpack = require('webpack');
 const configFactory = require('../config/webpack.config');
+const ssrConfig = require('../config/webpackSSR.config');
 const paths = require('../config/paths');
 const checkRequiredFiles = require('react-dev-utils/checkRequiredFiles');
 const formatWebpackMessages = require('react-dev-utils/formatWebpackMessages');
@@ -65,6 +66,10 @@ const writeStatsJson = argv.indexOf('--stats') !== -1;
 
 // Generate configuration
 const config = configFactory('production');
+// Add SSR config if needed (when the server file exist)
+const buildConfig = fs.pathExistsSync(paths.appSrcServer)
+  ? [config, serverConfig]
+  : config;
 
 // We require that you explicitly set browsers and do not fall back to
 // browserslist defaults.
@@ -150,21 +155,9 @@ checkBrowsers(paths.appPath, isInteractive)
 
 // Create the production build and print the deployment instructions.
 function build(previousFileSizes) {
-  // We used to support resolving modules according to `NODE_PATH`.
-  // This now has been deprecated in favor of jsconfig/tsconfig.json
-  // This lets you use absolute paths in imports inside large monorepos:
-  if (process.env.NODE_PATH) {
-    console.log(
-      chalk.yellow(
-        'Setting NODE_PATH to resolve modules absolutely has been deprecated in favor of setting baseUrl in jsconfig.json (or tsconfig.json if you are using TypeScript) and will be removed in a future major release of create-react-app.'
-      )
-    );
-    console.log();
-  }
-
   console.log('Creating an optimized production build...');
 
-  const compiler = webpack(config);
+  const compiler = webpack(buildConfig);
   return new Promise((resolve, reject) => {
     compiler.run((err, stats) => {
       let messages;

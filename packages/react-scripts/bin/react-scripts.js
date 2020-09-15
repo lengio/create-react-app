@@ -18,15 +18,22 @@ process.on('unhandledRejection', err => {
 const spawn = require('react-dev-utils/crossSpawn');
 const args = process.argv.slice(2);
 
-const scriptIndex = args.findIndex(
-  x => x === 'build' || x === 'eject' || x === 'start' || x === 'test'
-);
+const availableScripts = [
+  'build',
+  'eject',
+  'start',
+  'test',
+  'prettier',
+  'serve',
+];
+
+const scriptIndex = args.findIndex(x => availableScripts.includes(x));
 const script = scriptIndex === -1 ? args[0] : args[scriptIndex];
 const nodeArgs = scriptIndex > 0 ? args.slice(0, scriptIndex) : [];
 
-if (['build', 'eject', 'start', 'test'].includes(script)) {
+if (availableScripts.includes(script)) {
   const result = spawn.sync(
-    'node',
+    process.execPath,
     nodeArgs
       .concat(require.resolve('../scripts/' + script))
       .concat(args.slice(scriptIndex + 1)),

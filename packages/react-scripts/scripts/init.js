@@ -22,15 +22,9 @@ const spawn = require('react-dev-utils/crossSpawn');
 const { defaultBrowsers } = require('react-dev-utils/browsersHelper');
 const os = require('os');
 const verifyTypeScriptSetup = require('./utils/verifyTypeScriptSetup');
-
-function isInGitRepository() {
-  try {
-    execSync('git rev-parse --is-inside-work-tree', { stdio: 'ignore' });
-    return true;
-  } catch (e) {
-    return false;
-  }
-}
+const verifyPrettierSetup = require('./utils/verifyPrettierSetup');
+const isInGitRepository = require('./utils/isInGitRepository');
+const ensurePrettierGitHook = require('./utils/ensurePrettierGitHook');
 
 function isInMercurialRepository() {
   try {
@@ -103,6 +97,13 @@ module.exports = function(
         'create-react-app'
       )} are no longer supported.`
     );
+    console.error(
+      `You can fix this by running ${chalk.cyan(
+        'npm uninstall -g create-react-app'
+      )} or ${chalk.cyan(
+        'yarn global remove create-react-app'
+      )} before using ${chalk.cyan('create-react-app')} again.`
+    );
     return;
   }
 
@@ -110,13 +111,7 @@ module.exports = function(
     require.resolve(`${templateName}/package.json`, { paths: [appPath] })
   );
 
-  let templateJsonPath;
-  if (templateName) {
-    templateJsonPath = path.join(templatePath, 'template.json');
-  } else {
-    // TODO: Remove support for this in v4.
-    templateJsonPath = path.join(appPath, '.template.dependencies.json');
-  }
+  const templateJsonPath = path.join(templatePath, 'template.json');
 
   let templateJson = {};
   if (fs.existsSync(templateJsonPath)) {
@@ -125,7 +120,7 @@ module.exports = function(
 
   const templatePackage = templateJson.package || {};
 
-  // TODO: Deprecate support for root-level `dependencies` and `scripts` in v4.
+  // TODO: Deprecate support for root-level `dependencies` and `scripts` in v5.
   // These should now be set under the `package` key.
   if (templateJson.dependencies || templateJson.scripts) {
     console.log();
@@ -172,7 +167,7 @@ module.exports = function(
   ];
 
   // Keys from templatePackage that will be merged with appPackage
-  const templatePackageToMerge = ['dependencies', 'scripts'];
+  const templatePackageToMerge = ['scripts', 'dependencies'];
 
   // Keys from templatePackage that will be added to appPackage,
   // replacing any existing entries.
@@ -192,8 +187,10 @@ module.exports = function(
     {
       start: 'react-scripts start',
       build: 'react-scripts build',
+      serve: 'react-scripts serve',
       test: 'react-scripts test',
       eject: 'react-scripts eject',
+      prettier: 'react-scripts prettier',
     },
     templateScripts
   );
@@ -335,6 +332,9 @@ module.exports = function(
     verifyTypeScriptSetup();
   }
 
+  // Add prettier config file
+  verifyPrettierSetup();
+
   // Remove template
   console.log(`Removing template package using ${command}...`);
   console.log();
@@ -351,6 +351,8 @@ module.exports = function(
   if (initializedGit && tryGitCommit(appPath)) {
     console.log();
     console.log('Created git commit.');
+    // Add prettier to git hooks
+    ensurePrettierGitHook();
   }
 
   // Display the most elegant way to cd.

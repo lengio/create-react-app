@@ -12,7 +12,9 @@ const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
 const resolve = require('resolve');
+const CircularDependencyPlugin = require('circular-dependency-plugin');
 const PnpWebpackPlugin = require('pnp-webpack-plugin');
+const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const InlineChunkHtmlPlugin = require('react-dev-utils/InlineChunkHtmlPlugin');
@@ -24,7 +26,6 @@ const ManifestPlugin = require('webpack-manifest-plugin');
 const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
 const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
 const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin');
-const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const getCSSModuleLocalIdent = require('react-dev-utils/getCSSModuleLocalIdent');
 const paths = require('./paths');
 const modules = require('./modules');
@@ -39,6 +40,14 @@ const getCacheIdentifier = require('react-dev-utils/getCacheIdentifier');
 const postcssNormalize = require('postcss-normalize');
 
 const appPackageJson = require(paths.appPackageJson);
+
+/**
+ * HACK: we are copying ModuleScopePlugin from `react-dev-utils`
+ * because it uses descriptionFileRoot to check if request resolves
+ * to node_modules but slang-atoms rollup config won't add "node_modules"
+ * there so we need to use something else, like relativePath instead
+ */
+const ModuleScopePlugin = require('./ModuleScopePlugin');
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
@@ -97,6 +106,12 @@ module.exports = function(webpackEnv) {
           ? { publicPath: '../../' }
           : {},
       },
+      isEnvDevelopment && {
+        loader: 'dts-css-modules-loader',
+        options: {
+          namedExport: true,
+        },
+      },
       {
         loader: require.resolve('css-loader'),
         options: cssOptions,
@@ -133,6 +148,7 @@ module.exports = function(webpackEnv) {
           loader: require.resolve('resolve-url-loader'),
           options: {
             sourceMap: isEnvProduction ? shouldUseSourceMap : isEnvDevelopment,
+            root: paths.appSrc,
           },
         },
         {
@@ -300,9 +316,12 @@ module.exports = function(webpackEnv) {
       // We placed these paths second because we want `node_modules` to "win"
       // if there are any conflicts. This matches Node resolution mechanism.
       // https://github.com/facebook/create-react-app/issues/253
-      modules: ['node_modules', paths.appNodeModules].concat(
-        modules.additionalModulePaths || []
-      ),
+      modules: [
+        'node_modules',
+        paths.appNodeModules,
+        paths.appSrc,
+        paths.appSrcApp,
+      ].concat(modules.additionalModulePaths || []),
       // These are the reasonable defaults supported by the Node ecosystem.
       // We also include JSX as a common component filename extension to support
       // some tools, although we do not recommend using it, see:
@@ -313,6 +332,13 @@ module.exports = function(webpackEnv) {
         .map(ext => `.${ext}`)
         .filter(ext => useTypeScript || !ext.includes('ts')),
       alias: {
+        // HACK: when linking slang-atoms locally hooks fails
+        //  because the project will find the react version in
+        // slang-atoms (devDependency) which might not be the same
+        ...(isEnvDevelopment && {
+          react: path.resolve('node_modules/react'),
+        }),
+        'slang-atoms': path.resolve('node_modules', '@lengio/slang-atoms'),
         // Support React Native Web
         // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
         'react-native': 'react-native-web',
@@ -365,7 +391,9 @@ module.exports = function(webpackEnv) {
                 baseConfig: isExtendingEslintConfig
                   ? undefined
                   : {
-                      extends: [require.resolve('eslint-config-react-app')],
+                      extends: [
+                        require.resolve('@lengio/eslint-config-react-app'),
+                      ],
                     },
                 useEslintrc: isExtendingEslintConfig,
                 // @remove-on-eject-end
@@ -373,7 +401,7 @@ module.exports = function(webpackEnv) {
               loader: require.resolve('eslint-loader'),
             },
           ],
-          include: paths.appSrc,
+          include: [paths.appSrc],
         },
         {
           // "oneOf" will traverse all following loaders until one will
@@ -395,7 +423,7 @@ module.exports = function(webpackEnv) {
             // The preset includes JSX, Flow, TypeScript, and some ESnext features.
             {
               test: /\.(js|mjs|jsx|ts|tsx)$/,
-              include: paths.appSrc,
+              include: [paths.appSrc],
               loader: require.resolve('babel-loader'),
               options: {
                 customize: require.resolve(
@@ -498,6 +526,7 @@ module.exports = function(webpackEnv) {
               exclude: cssModuleRegex,
               use: getStyleLoaders({
                 importLoaders: 1,
+                localsConvention: 'camelCaseOnly',
                 sourceMap: isEnvProduction
                   ? shouldUseSourceMap
                   : isEnvDevelopment,
@@ -559,6 +588,12 @@ module.exports = function(webpackEnv) {
                 },
                 'sass-loader'
               ),
+            },
+            // Process lingui files
+            {
+              test: /messages\.(po)$/,
+              include: paths.locales,
+              loader: require.resolve('@lingui/loader'),
             },
             // "file" loader makes sure those assets get served by WebpackDevServer.
             // When you `import` an asset, you get its (virtual) filename.
@@ -630,6 +665,11 @@ module.exports = function(webpackEnv) {
       // during a production build.
       // Otherwise React will be compiled in the very slow development mode.
       new webpack.DefinePlugin(env.stringified),
+      // Provide an intermediate caching step for modules.
+      // In order to see results, you'll need to run webpack twice with this plugin:
+      // the first build will take the normal amount of time. The second build will be
+      // signficantly faster
+      isEnvDevelopment && new HardSourceWebpackPlugin(),
       // This is necessary to emit hot updates (currently CSS only):
       isEnvDevelopment && new webpack.HotModuleReplacementPlugin(),
       // Experimental hot reloading for React .
@@ -639,8 +679,6 @@ module.exports = function(webpackEnv) {
         new ReactRefreshWebpackPlugin({
           overlay: {
             entry: webpackDevClientEntry,
-            // TODO: This is just a stub module. Clean this up if possible.
-            module: require.resolve('./hotRefreshOverlayModuleStub'),
           },
         }),
       // Watcher doesn't work well if you mistype casing in a path so we use
@@ -660,6 +698,12 @@ module.exports = function(webpackEnv) {
           filename: 'static/css/[name].[contenthash:8].css',
           chunkFilename: 'static/css/[name].[contenthash:8].chunk.css',
         }),
+      // Avoid circular dependencies
+      new CircularDependencyPlugin({
+        exclude: /node_modules/,
+        failOnError: true,
+        cwd: process.cwd(),
+      }),
       // Generate an asset manifest file with the following content:
       // - "files" key: Mapping of all asset filenames to their corresponding
       //   output file so that tools can pick it up without having to parse
@@ -715,7 +759,6 @@ module.exports = function(webpackEnv) {
             basedir: paths.appNodeModules,
           }),
           async: isEnvDevelopment,
-          useTypescriptIncrementalApi: true,
           checkSyntacticErrors: true,
           resolveModuleNameModule: process.versions.pnp
             ? `${__dirname}/pnpTs.js`
@@ -725,9 +768,14 @@ module.exports = function(webpackEnv) {
             : undefined,
           tsconfig: paths.appTsConfig,
           reportFiles: [
-            '**',
-            '!**/__tests__/**',
-            '!**/?(*.)(spec|test).*',
+            // This one is specifically to match during CI tests,
+            // as micromatch doesn't match
+            // '../cra-template-typescript/template/src/App.tsx'
+            // otherwise.
+            '../**/src/**/*.{ts,tsx}',
+            '**/src/**/*.{ts,tsx}',
+            '!**/src/**/__tests__/**',
+            '!**/src/**/?(*.)(spec|test).*',
             '!**/src/setupProxy.*',
             '!**/src/setupTests.*',
           ],

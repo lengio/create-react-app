@@ -74,11 +74,6 @@ const program = new commander.Command(packageJson.name)
   )
   .option('--use-npm')
   .option('--use-pnp')
-  // TODO: Remove this in next major release.
-  .option(
-    '--typescript',
-    '(this option will be removed in favour of templates in the next major release of create-react-app)'
-  )
   .allowUnknownOption()
   .on('--help', () => {
     console.log(`    Only ${chalk.green('<project-directory>')} is required.`);
@@ -114,7 +109,7 @@ const program = new commander.Command(packageJson.name)
     console.log();
     console.log(`    A custom ${chalk.cyan('--template')} can be one of:`);
     console.log(
-      `      - a custom fork published on npm: ${chalk.green(
+      `      - a custom template published on npm: ${chalk.green(
         'cra-template-typescript'
       )}`
     );
@@ -158,7 +153,7 @@ if (program.info) {
         System: ['OS', 'CPU'],
         Binaries: ['Node', 'npm', 'Yarn'],
         Browsers: ['Chrome', 'Edge', 'Internet Explorer', 'Firefox', 'Safari'],
-        npmPackages: ['react', 'react-dom', 'react-scripts'],
+        npmPackages: ['react', 'react-dom', '@lengio/react-scripts'],
         npmGlobalPackages: ['create-react-app'],
       },
       {
@@ -190,19 +185,10 @@ createApp(
   program.scriptsVersion,
   program.template,
   program.useNpm,
-  program.usePnp,
-  program.typescript
+  program.usePnp
 );
 
-function createApp(
-  name,
-  verbose,
-  version,
-  template,
-  useNpm,
-  usePnp,
-  useTypeScript
-) {
+function createApp(name, verbose, version, template, useNpm, usePnp) {
   const unsupportedNodeVersion = !semver.satisfies(process.version, '>=10');
   if (unsupportedNodeVersion) {
     console.log(
@@ -281,23 +267,6 @@ function createApp(
         // 2 supports PnP by default and breaks when trying to use the flag
         usePnp = false;
       }
-    }
-  }
-
-  if (useTypeScript) {
-    console.log(
-      chalk.yellow(
-        'The --typescript option has been deprecated and will be removed in a future release.'
-      )
-    );
-    console.log(
-      chalk.yellow(
-        `In future, please use ${chalk.cyan('--template typescript')}.`
-      )
-    );
-    console.log();
-    if (!template) {
-      template = 'typescript';
     }
   }
 
@@ -452,21 +421,12 @@ function run(
           console.log('');
           console.log(
             `The ${chalk.cyan(packageInfo.name)} version you're using ${
-              packageInfo.name === 'react-scripts' ? 'is not' : 'may not be'
+              packageInfo.name === '@lengio/react-scripts'
+                ? 'is not'
+                : 'may not be'
             } compatible with the ${chalk.cyan('--template')} option.`
           );
           console.log('');
-        }
-
-        // TODO: Remove with next major release.
-        if (!supportsTemplates && (template || '').includes('typescript')) {
-          allDependencies.push(
-            '@types/node',
-            '@types/react',
-            '@types/react-dom',
-            '@types/jest',
-            'typescript'
-          );
         }
 
         console.log(
@@ -569,7 +529,7 @@ function run(
 }
 
 function getInstallPackage(version, originalDirectory) {
-  let packageToInstall = 'react-scripts';
+  let packageToInstall = '@lengio/react-scripts';
   const validSemver = semver.valid(version);
   if (validSemver) {
     packageToInstall += `@${validSemver}`;
@@ -621,7 +581,7 @@ function getInstallPackage(version, originalDirectory) {
 }
 
 function getTemplateInstallPackage(template, originalDirectory) {
-  let templateToInstall = 'cra-template';
+  let templateToInstall = '@lengio/cra-template-typescript';
   if (template) {
     if (template.match(/^file:/)) {
       templateToInstall = `file:${path.resolve(
@@ -748,12 +708,6 @@ function getPackageInfo(installPackage) {
     return Promise.resolve({
       name: installPackage.match(/([^/]+)\.git(#.*)?$/)[1],
     });
-  } else if (installPackage.match(/.+@/)) {
-    // Do not match @scope/ when stripping off @version or @tag
-    return Promise.resolve({
-      name: installPackage.charAt(0) + installPackage.substr(1).split('@')[0],
-      version: installPackage.split('@')[1],
-    });
   } else if (installPackage.match(/^file:/)) {
     const installPackagePath = installPackage.match(/^file:(.*)?$/)[1];
     const { name, version } = require(path.join(
@@ -868,7 +822,7 @@ function checkAppName(appName) {
   }
 
   // TODO: there should be a single place that holds the dependencies
-  const dependencies = ['react', 'react-dom', 'react-scripts'].sort();
+  const dependencies = ['react', 'react-dom', '@lengio/react-scripts'].sort();
   if (dependencies.includes(appName)) {
     console.error(
       chalk.red(
